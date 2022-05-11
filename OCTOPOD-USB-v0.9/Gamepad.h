@@ -52,10 +52,15 @@ typedef struct {
 } GamepadReport_SNES;
 
 typedef struct {
-  uint16_t buttons;
+  uint16_t buttons : 12;
 
   int8_t X;
-  int8_t Y;  
+  int8_t Y;
+  int8_t Z;
+  int8_t RZ;
+
+  uint8_t PoV;
+    
 } GamepadReport_PSX;
 
 typedef struct {

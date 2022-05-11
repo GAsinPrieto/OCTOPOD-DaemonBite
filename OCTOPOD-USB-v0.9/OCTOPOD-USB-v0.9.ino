@@ -488,11 +488,16 @@ void loop() {
           buttons_PSX[gp] = Psx[gp].read();
 
           // Has any buttons changed state?
-          if (buttons_PSX[gp] != buttonsPrev_PSX[gp] || buttons_PSX[gp] != buttonsPrev_PSX[gp] )
+          if (true)//(buttons_PSX[gp] != buttonsPrev_PSX[gp] || buttons_PSX[gp] != buttonsPrev_PSX[gp] )
           {
             Gamepad[gp]._GamepadReport_PSX.buttons = buttons_PSX[gp] >> 4;
             Gamepad[gp]._GamepadReport_PSX.Y = ((buttons_PSX[gp] & psxDown) >> 1) - ((buttons_PSX[gp] & psxUp) >> 3);
             Gamepad[gp]._GamepadReport_PSX.X = ((buttons_PSX[gp] & psxRight) >> 2) - (buttons_PSX[gp] & psxLeft);
+            Gamepad[gp]._GamepadReport_PSX.Z = 10;
+            Gamepad[gp]._GamepadReport_PSX.RZ = -55;
+            Gamepad[gp]._GamepadReport_PSX.PoV = 0;
+            
+            
             buttonsPrev_PSX[gp] = buttons_PSX[gp];
             Gamepad[gp].send();
             //Serial.println("PSX");
