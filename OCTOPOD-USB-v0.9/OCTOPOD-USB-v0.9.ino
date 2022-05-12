@@ -488,7 +488,7 @@ void loop() {
           buttons_PSX[gp] = Psx[gp].read();
 
           // Has any buttons changed state?
-          if (true)//(buttons_PSX[gp] != buttonsPrev_PSX[gp] || buttons_PSX[gp] != buttonsPrev_PSX[gp] )
+          if (buttons_PSX[gp] != buttonsPrev_PSX[gp] || buttons_PSX[gp] != buttonsPrev_PSX[gp] )
           {
             Gamepad[gp]._GamepadReport_PSX.buttons = buttons_PSX[gp] >> 4;
             Gamepad[gp]._GamepadReport_PSX.Y = ((buttons_PSX[gp] & psxDown) >> 1) - ((buttons_PSX[gp] & psxUp) >> 3);
