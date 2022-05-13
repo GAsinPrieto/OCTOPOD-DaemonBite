@@ -138,13 +138,15 @@ uint32_t microsButtons = 0;
 
 
 //PSX
-Psx Psx[2];
+//Psx Psx[2];
+Psx Psx1, Psx2;
+
 uint16_t buttons_PSX[GAMEPAD_COUNT_MAX]     = {0, 0, 0, 0};
 uint16_t buttonsPrev_PSX[GAMEPAD_COUNT_MAX] = {0, 0, 0, 0};
 #define dataPin   3
 #define cmndPin   12
-#define attPin1   4
-#define attPin2   30
+#define attPin1   30
+#define attPin2   4
 #define clockPin  2
 
 
@@ -236,9 +238,10 @@ void loop() {
   }
   else if (SISTEMA == PSX_) {
 
-    Psx[0].setupPins(dataPin, cmndPin, attPin1, clockPin, 5);
-    Psx[1].setupPins(dataPin, cmndPin, attPin2, clockPin, 5);
-
+    /*Psx[0].setupPins(dataPin, cmndPin, attPin1, clockPin, 10);
+    Psx[1].setupPins(dataPin, cmndPin, attPin2, clockPin, 10);*/
+    Psx1.setupPins(dataPin, cmndPin, attPin1, clockPin, 10);
+    Psx2.setupPins(dataPin, cmndPin, attPin2, clockPin, 10);
   }
   else if (SISTEMA == NEOGEO_) {
     // Initialize debouncing timestamps
@@ -485,22 +488,30 @@ void loop() {
         for (gp = 0; gp < GAMEPAD_COUNT; gp++)
         {
           buttons_PSX[gp] = 0;
-          buttons_PSX[gp] = Psx[gp].read();
+          //buttons_PSX[gp] = Psx[gp].read();
+          if (gp == 0)
+            buttons_PSX[gp] = Psx1.read();
+          else
+            buttons_PSX[gp] = Psx2.read();
 
           // Has any buttons changed state?
-          if (buttons_PSX[gp] != buttonsPrev_PSX[gp] || buttons_PSX[gp] != buttonsPrev_PSX[gp] )
+          if (buttons_PSX[gp] != buttonsPrev_PSX[gp])// || buttons_PSX[gp] != buttonsPrev_PSX[gp] )
           {
             Gamepad[gp]._GamepadReport_PSX.buttons = buttons_PSX[gp] >> 4;
             Gamepad[gp]._GamepadReport_PSX.Y = ((buttons_PSX[gp] & psxDown) >> 1) - ((buttons_PSX[gp] & psxUp) >> 3);
             Gamepad[gp]._GamepadReport_PSX.X = ((buttons_PSX[gp] & psxRight) >> 2) - (buttons_PSX[gp] & psxLeft);
-            Gamepad[gp]._GamepadReport_PSX.Z = 10;
+            /*Gamepad[gp]._GamepadReport_PSX.Z = 10;
             Gamepad[gp]._GamepadReport_PSX.RZ = -55;
-            Gamepad[gp]._GamepadReport_PSX.PoV = 0;
+            Gamepad[gp]._GamepadReport_PSX.PoV = 0;*/
             
             
             buttonsPrev_PSX[gp] = buttons_PSX[gp];
+            
             Gamepad[gp].send();
-            //Serial.println("PSX");
+            Serial.print("mando 1; ");
+            Serial.print(Gamepad[0]._GamepadReport_PSX.buttons);
+            Serial.print(" - mando 2: ");
+            Serial.println(Gamepad[1]._GamepadReport_PSX.buttons);
 
           }
         }
