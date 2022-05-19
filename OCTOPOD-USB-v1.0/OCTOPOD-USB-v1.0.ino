@@ -222,7 +222,7 @@ void setup() {
 void loop() {
 
   uint16_t data1, data2, data3, data4, data5, data6;
-  byte mode;
+  byte mode, prevmode=0;
 
   //if (SISTEMA == PSX_) GAMEPAD_COUNT = 1;
   Gamepad_ Gamepad[GAMEPAD_COUNT](SISTEMA);
@@ -252,8 +252,8 @@ void loop() {
     Psx[0].setupPins(dataPin, cmndPin, attPin1, clockPin, ackPin, 10);
     Psx[1].setupPins(dataPin, cmndPin, attPin2, clockPin, ackPin, 10);
 
-    //Psx[0].rumble();
-    //Psx[1].rumble();
+    Psx[0].rumble(0x41);
+    Psx[1].rumble(0x41);
   }
   else if (SISTEMA == NEOGEO_) {
     // Initialize debouncing timestamps
@@ -515,7 +515,11 @@ void loop() {
             verticalL_PSX[gp] = data6;
           }
 
-
+          if (mode != prevmode){
+            Psx[gp].rumble(mode);
+            prevmode = mode;
+          }
+          
           // Has any buttons changed state?
           if (buttons_PSX[gp] != buttonsPrev_PSX[gp] || horizontalR_PSX[gp] != horizontalRPrev_PSX[gp] || verticalR_PSX[gp] != verticalRPrev_PSX[gp] || horizontalL_PSX[gp] != horizontalLPrev_PSX[gp] || verticalL_PSX[gp] != verticalLPrev_PSX[gp])
           {

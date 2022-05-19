@@ -77,7 +77,7 @@ byte Psx::noshift(byte _dataOut)              // Does NOT the actual shifting, b
     if (_temp)
     {
       /*if (_dataOut != 0x42) _dataIn = _dataIn | (B10000000 >> _i);    // Shifts the read data into _dataIn
-      else*/ _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
+        else*/ _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
     }
 
     digitalWrite(_clockPin, HIGH);
@@ -113,6 +113,10 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
 
 /*unsigned int*/ void Psx::read(uint16_t * data1, uint16_t * data2, uint16_t * data3, uint16_t * data4, uint16_t * data5, uint16_t * data6, byte * mode)
 {
+  byte motor1=0x00;
+  byte motor2=0x00;
+  
+  
   digitalWrite(_attPin, LOW);
 
   shift(0x01);
@@ -125,24 +129,24 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
 
   if (_mode == 0x41) //digital
   {
-    _data1 = ~shift(0xFF);
+    _data1 = ~shift(motor1);
     while (_ackPin);
-    _data2 = ~shift(0xFF);
+    _data2 = ~shift(motor2);
 
     *data1 = _data1;
     *data2 = _data2;
     digitalWrite(_attPin, HIGH);
 
     //_dataOut = (_data2 << 8) | _data1;
-    
+
 
     return;// _dataOut;
   }
   else if (_mode == 0x73 || _mode == 0x53) //just analog (red, green)
   {
-    _data1 = ~shift(0xFF);
+    _data1 = ~shift(motor1);
     while (_ackPin);
-    _data2 = ~shift(0xFF);
+    _data2 = ~shift(motor2);
     while (_ackPin);
     _data3 = ~noshift(0xFF);
     while (_ackPin);
@@ -158,7 +162,7 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
     *data4 = _data4;
     *data5 = _data5;
     *data6 = _data6;
-    
+
     digitalWrite(_attPin, HIGH);
 
     //_dataOut = (_data2 << 8) | _data1;
@@ -168,8 +172,10 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
 
 
 
-/*void Psx::rumble()
+void Psx::rumble(byte mode)
 {
+
+  //enter config
   digitalWrite(_attPin, LOW);
 
   shift(0x01);
@@ -185,8 +191,36 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
 
   digitalWrite(_attPin, HIGH);
 
-  delay(100);
+  delay(200);
 
+  /*
+    //analog mode by default
+    digitalWrite(_attPin, LOW);
+
+    shift(0x01);
+    while (_ackPin);
+    shift(0x44);
+    while (_ackPin);
+    shift(0x00);
+    while (_ackPin);
+    shift(0x01);
+    while (_ackPin);
+    shift(0x03);
+    while (_ackPin);
+    shift(0x00);
+    while (_ackPin);
+    shift(0x00);
+    while (_ackPin);
+    shift(0x00);
+    while (_ackPin);
+    shift(0x00);
+    while (_ackPin);
+
+    digitalWrite(_attPin, HIGH);
+
+    delay(200);
+  */
+  //map motors
   digitalWrite(_attPin, LOW);
 
   shift(0x01);
@@ -199,11 +233,23 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
   while (_ackPin);
   shift(0x01);
   while (_ackPin);
+  if (mode != 0x41)
+  {
+    shift(0xff);
+    while (_ackPin);
+    shift(0xff);
+    while (_ackPin);
+    shift(0xff);
+    while (_ackPin);
+    shift(0xff);
+    while (_ackPin);
+  }
 
   digitalWrite(_attPin, HIGH);
 
   delay(100);
 
+  //exit cofig
   digitalWrite(_attPin, LOW);
 
   shift(0x01);
@@ -216,14 +262,19 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
   while (_ackPin);
   shift(0x5a);
   while (_ackPin);
-  shift(0x5a);
-  while (_ackPin);
-  shift(0x5a);
-  while (_ackPin);
-  shift(0x5a);
-  while (_ackPin);
+  if (mode != 0x41)
+  {
+    shift(0x5a);
+    while (_ackPin);
+    shift(0x5a);
+    while (_ackPin);
+    shift(0x5a);
+    while (_ackPin);
+    shift(0x5a);
+    while (_ackPin);
+  }
 
   digitalWrite(_attPin, HIGH);
-  
+
   return;
-}*/
+}
