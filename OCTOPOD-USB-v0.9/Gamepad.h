@@ -54,12 +54,13 @@ typedef struct {
 typedef struct {
   uint16_t buttons : 12;
 
-  int8_t X;
-  int8_t Y;
-  /*int8_t Z;
-  int8_t RZ;
+  uint8_t PoV;
+  
+  uint8_t X;
+  uint8_t Y;
+  uint8_t Z;
+  uint8_t RZ;
 
-  uint8_t PoV;*/
     
 } GamepadReport_PSX;
 

@@ -47,37 +47,8 @@ byte Psx::shift(byte _dataOut)							// Does the actual shifting, both in and ou
     _temp = digitalRead(_dataPin);					// Reads the data pin
     if (_temp)
     {
-      /*if (_dataOut != 0x42)*/ _dataIn = _dataIn | (B10000000 >> _i);		// Shifts the read data into _dataIn
-      //else _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
-    }
-
-    digitalWrite(_clockPin, HIGH);
-    delayMicroseconds(_delay);
-  }
-  return _dataIn;
-}
-
-byte Psx::noshift(byte _dataOut)              // Does NOT the actual shifting, both in and out simultaneously
-{
-  _temp = 0;
-  _dataIn = 0;
-
-  for (_i = 0; _i <= 7; _i++)
-  {
-
-
-    if ( _dataOut & (1 << _i) ) digitalWrite(_cmndPin, HIGH); // Writes out the _dataOut bits
-    else digitalWrite(_cmndPin, LOW);
-
-    digitalWrite(_clockPin, LOW);
-
-    delayMicroseconds(_delay);
-
-    _temp = digitalRead(_dataPin);          // Reads the data pin
-    if (_temp)
-    {
-      /*if (_dataOut != 0x42) _dataIn = _dataIn | (B10000000 >> _i);    // Shifts the read data into _dataIn
-      else*/ _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
+      if (_dataOut != 0x42) _dataIn = _dataIn | (B10000000 >> _i);		// Shifts the read data into _dataIn
+      else _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
     }
 
     digitalWrite(_clockPin, HIGH);
@@ -111,32 +82,29 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
 }
 
 
-/*unsigned int*/ void Psx::read(uint16_t * data1, uint16_t * data2, uint16_t * data3, uint16_t * data4, uint16_t * data5, uint16_t * data6, byte * mode)
+unsigned int Psx::read()
 {
   digitalWrite(_attPin, LOW);
 
   shift(0x01);
   while (_ackPin);
-  _mode = noshift(0x42);
+  _mode = shift(0x42);
   while (_ackPin);
   shift(0xFF);
   while (_ackPin);
-  *mode = _mode;
 
   if (_mode == 0x41) //digital
   {
     _data1 = ~shift(0xFF);
+    //Serial.print(_data1);
     while (_ackPin);
     _data2 = ~shift(0xFF);
 
-    *data1 = _data1;
-    *data2 = _data2;
     digitalWrite(_attPin, HIGH);
 
-    //_dataOut = (_data2 << 8) | _data1;
-    
+    _dataOut = (_data2 << 8) | _data1;
 
-    return;// _dataOut;
+    return _dataOut;
   }
   else if (_mode == 0x73 || _mode == 0x53) //just analog (red, green)
   {
@@ -144,24 +112,17 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
     while (_ackPin);
     _data2 = ~shift(0xFF);
     while (_ackPin);
-    _data3 = ~noshift(0xFF);
+    _data3 = ~shift(0xFF);
     while (_ackPin);
-    _data4 = ~noshift(0xFF);
+    _data4 = ~shift(0xFF);
     while (_ackPin);
-    _data5 = ~noshift(0xFF);
+    _data5 = ~shift(0xFF);
     while (_ackPin);
-    _data6 = ~noshift(0xFF);
+    _data6 = ~shift(0xFF);
 
-    *data1 = _data1;
-    *data2 = _data2;
-    *data3 = _data3;
-    *data4 = _data4;
-    *data5 = _data5;
-    *data6 = _data6;
-    
     digitalWrite(_attPin, HIGH);
 
-    //_dataOut = (_data2 << 8) | _data1;
-    return;// _dataOut;
+    _dataOut = (_data2 << 8) | _data1;
+
+    return _dataOut;
   }
-}

@@ -141,10 +141,7 @@ static const uint8_t _hidReportDescriptorGEN[] PROGMEM = {
 };
 
 //PSX
-// left analog: pov
-// r analog vertical: z axis
-// r analog horizontal: z rotation
-/*static const uint8_t _hidReportDescriptorPSX[] PROGMEM = {
+static const uint8_t _hidReportDescriptorPSX[] PROGMEM = {
   0x05, 0x01,                       // USAGE_PAGE (Generic Desktop)
   0x09, 0x04,                       // USAGE (Joystick) (Maybe change to gamepad? I don't think so but...)
   0xa1, 0x01,                       // COLLECTION (Application)
@@ -182,14 +179,14 @@ static const uint8_t _hidReportDescriptorGEN[] PROGMEM = {
       0x05, 0x01,                       // USAGE_PAGE (Generic Desktop)
       0x09, 0x05,                       // USAGE (Game Pad)
       0xa1, 0x00,                       // COLLECTION (Physical) 
-        0x09, 0x32,                       // USAGE (Z)
-        0x09, 0x35,                       // USAGE (RZ)
         0x09, 0x30,                       // USAGE (X)
         0x09, 0x31,                       // USAGE (Y)        
-        //0x35, 0x00,                    //     PHYSICAL_MINIMUM (0)
-        //0x46, 0xff, 0x00,              //     PHYSICAL_MAXIMUM (255)
-        0x15, 0x00,                       // LOGICAL_MINIMUM (-127)
-        0x26, 0xff, 0x00,                       // LOGICAL_MAXIMUM (127)
+        0x09, 0x32,                       // USAGE (Z)
+        0x09, 0x35,                       // USAGE (RZ)
+        0x35, 0x00,                    //     PHYSICAL_MINIMUM (0)
+        0x46, 0xff, 0x00,              //     PHYSICAL_MAXIMUM (255)
+        0x15, 0x00,                       // LOGICAL_MINIMUM (0)
+        0x26, 0xff, 0x00,                       // LOGICAL_MAXIMUM (255)
         0x95, 0x04,                       // REPORT_COUNT (4)
         0x75, 0x08,                       // REPORT_SIZE (8)
         0x81, 0x02,                       // INPUT (Data,Var,Abs)
@@ -197,9 +194,9 @@ static const uint8_t _hidReportDescriptorGEN[] PROGMEM = {
 
     0xc0,                             // END_COLLECTION
   0xc0, 
-};*/
+};
 
-static const uint8_t _hidReportDescriptorPSX[] PROGMEM = {
+/*static const uint8_t _hidReportDescriptorPSX[] PROGMEM = {
   0x05, 0x01,                       // USAGE_PAGE (Generic Desktop)
   0x09, 0x04,                       // USAGE (Joystick) (Maybe change to gamepad? I don't think so but...)
   0xa1, 0x01,                       // COLLECTION (Application)
@@ -218,7 +215,7 @@ static const uint8_t _hidReportDescriptorPSX[] PROGMEM = {
       0x75, 0x04,                       // REPORT_SIZE (4)
       0x81, 0x03,                       // INPUT (Const,Var,Abs)
     
-
+*/
       /*0x05, 0x01,                       // USAGE_PAGE (Generic Desktop)
       0x09, 0x39,                       // USAGE (HAT SWITCH)
       0x15, 0x00,                       // LOGICAL_MINIMUM (0)
@@ -233,20 +230,20 @@ static const uint8_t _hidReportDescriptorPSX[] PROGMEM = {
       0x95, 0x01,                       // REPORT_COUNT (1) ; pad out the bits into a number divisible by 8
       0x75, 0x04,                       // REPORT_SIZE (4)
       0x81, 0x03,                       // INPUT (Const,Var,Abs)*/
-
+/*
       0x05, 0x01,                       // USAGE_PAGE (Generic Desktop)
       //0x09, 0x05,                       // USAGE (Game Pad)
       0x09, 0x01,                       // USAGE (Pointer)
       0xa1, 0x00,                       // COLLECTION (Physical) 
-        /*0x09, 0x32,                       // USAGE (Z)
+*/        /*0x09, 0x32,                       // USAGE (Z)
         0x09, 0x35,                       // USAGE (RZ)*/
-        0x09, 0x30,                       // USAGE (X)
+/*        0x09, 0x30,                       // USAGE (X)
         0x09, 0x31,                       // USAGE (Y)        
         //0x35, 0x00,                    //     PHYSICAL_MINIMUM (0)
         //0x46, 0xff, 0x00,              //     PHYSICAL_MAXIMUM (255)
-        /*0x15, 0x00,                       // LOGICAL_MINIMUM (-127)
+*/        /*0x15, 0x00,                       // LOGICAL_MINIMUM (-127)
         0x26, 0xff, 0x00,                       // LOGICAL_MAXIMUM (127)*/
-        0x15, 0xff,                       // LOGICAL_MINIMUM (-1)
+/*        0x15, 0xff,                       // LOGICAL_MINIMUM (-1)
         0x25, 0x01,                       // LOGICAL_MAXIMUM (1)
         //0x95, 0x04,                       // REPORT_COUNT (4)
         0x95, 0x02,                       // REPORT_COUNT (2)
@@ -256,7 +253,7 @@ static const uint8_t _hidReportDescriptorPSX[] PROGMEM = {
 
     0xc0,                             // END_COLLECTION
   0xc0, 
-};
+};*/
 
 //NES
 static const uint8_t _hidReportDescriptorNES[] PROGMEM = {
