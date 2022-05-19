@@ -251,6 +251,9 @@ void loop() {
 
     Psx[0].setupPins(dataPin, cmndPin, attPin1, clockPin, ackPin, 10);
     Psx[1].setupPins(dataPin, cmndPin, attPin2, clockPin, ackPin, 10);
+
+    //Psx[0].rumble();
+    //Psx[1].rumble();
   }
   else if (SISTEMA == NEOGEO_) {
     // Initialize debouncing timestamps
@@ -499,6 +502,7 @@ void loop() {
           buttons_PSX[gp] = 0;
           /*buttons_PSX[gp] = */Psx[gp].read(&data1, &data2, &data3, &data4, &data5, &data6, &mode);
 
+          
           if (mode == 0x41) buttons_PSX[gp] = (data2 << 8) | data1;
 
           if (mode == 0x73 || mode == 0x53) {
@@ -523,21 +527,34 @@ void loop() {
               byte rg = (buttons_PSX[gp] & psxRight) >> 2;
               byte lf = (buttons_PSX[gp] & psxLeft);
               
-              byte up_star = up*(5-dw)/5;
-              byte dw_star = dw*(1-up);
-              byte rg_star = rg*(7-lf)/7;
-              byte lf_star = lf*(3-rg)/3;
-              
               Gamepad[gp]._GamepadReport_PSX.Y = verticalL_PSX[gp];
               Gamepad[gp]._GamepadReport_PSX.X = horizontalL_PSX[gp];
-              Gamepad[gp]._GamepadReport_PSX.PoV = 7*lf_star+up_star + (3*rg_star+up_star)/(1+!(up_star^rg_star)) + (3*rg_star+5*dw_star)/(1+!(dw_star^rg_star)) + (7*lf_star+5*dw_star)/(1+!(dw_star^lf_star));
+              //Gamepad[gp]._GamepadReport_PSX.PoV = 7*lf_star+up_star + (3*rg_star+up_star)/(1+!(up_star^rg_star)) + (3*rg_star+5*dw_star)/(1+!(dw_star^rg_star)) + (7*lf_star+5*dw_star)/(1+!(dw_star^lf_star));
+              Gamepad[gp]._GamepadReport_PSX.PoV = 8;
+              if (up&&lf){
+                Gamepad[gp]._GamepadReport_PSX.PoV = 7;//B00001001;
+              }else if (up&&rg){
+                Gamepad[gp]._GamepadReport_PSX.PoV = 1;//B00000011;
+              }else if (dw&&lf){
+                Gamepad[gp]._GamepadReport_PSX.PoV = 5;//B00001100;
+              }else if (dw&&rg){
+                Gamepad[gp]._GamepadReport_PSX.PoV = 3;//B00000110;
+              }else if (up){
+                Gamepad[gp]._GamepadReport_PSX.PoV = 0;//B00000001;
+              }else if (lf){
+                Gamepad[gp]._GamepadReport_PSX.PoV = 6;//B00001000;
+              }else if (rg){
+                Gamepad[gp]._GamepadReport_PSX.PoV = 2;//B00000010;
+              }else if (dw){
+                Gamepad[gp]._GamepadReport_PSX.PoV = 4;//B00000100;
+              }
               Gamepad[gp]._GamepadReport_PSX.Z = verticalR_PSX[gp];
               Gamepad[gp]._GamepadReport_PSX.RZ = horizontalR_PSX[gp];
             }
             else if (mode == 0x41) //digital
             {
-              Gamepad[gp]._GamepadReport_PSX.Y = (((buttons_PSX[gp] & psxDown) >> 1) - ((buttons_PSX[gp] & psxUp) >> 3)) * 0xFF;
-              Gamepad[gp]._GamepadReport_PSX.X = (((buttons_PSX[gp] & psxRight) >> 2) - (buttons_PSX[gp] & psxLeft)) * 0xFF;              
+              Gamepad[gp]._GamepadReport_PSX.Y = (((buttons_PSX[gp] & psxDown) >> 1) - ((buttons_PSX[gp] & psxUp) >> 3)) * 127 + 127;
+              Gamepad[gp]._GamepadReport_PSX.X = (((buttons_PSX[gp] & psxRight) >> 2) - (buttons_PSX[gp] & psxLeft)) * 127 + 127;              
             }
             
             buttonsPrev_PSX[gp] = buttons_PSX[gp];

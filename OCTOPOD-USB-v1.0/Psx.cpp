@@ -165,3 +165,65 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
     return;// _dataOut;
   }
 }
+
+
+
+/*void Psx::rumble()
+{
+  digitalWrite(_attPin, LOW);
+
+  shift(0x01);
+  while (_ackPin);
+  shift(0x43);
+  while (_ackPin);
+  shift(0x00);
+  while (_ackPin);
+  shift(0x01);
+  while (_ackPin);
+  shift(0x00);
+  while (_ackPin);
+
+  digitalWrite(_attPin, HIGH);
+
+  delay(100);
+
+  digitalWrite(_attPin, LOW);
+
+  shift(0x01);
+  while (_ackPin);
+  shift(0x4D);
+  while (_ackPin);
+  shift(0x00);
+  while (_ackPin);
+  shift(0x00);
+  while (_ackPin);
+  shift(0x01);
+  while (_ackPin);
+
+  digitalWrite(_attPin, HIGH);
+
+  delay(100);
+
+  digitalWrite(_attPin, LOW);
+
+  shift(0x01);
+  while (_ackPin);
+  shift(0x43);
+  while (_ackPin);
+  shift(0x00);
+  while (_ackPin);
+  shift(0x00);
+  while (_ackPin);
+  shift(0x5a);
+  while (_ackPin);
+  shift(0x5a);
+  while (_ackPin);
+  shift(0x5a);
+  while (_ackPin);
+  shift(0x5a);
+  while (_ackPin);
+
+  digitalWrite(_attPin, HIGH);
+  
+  return;
+}*/
