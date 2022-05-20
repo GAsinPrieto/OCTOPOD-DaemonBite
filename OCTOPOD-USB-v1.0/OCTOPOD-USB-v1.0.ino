@@ -182,11 +182,13 @@ void setup() {
   while (!(UDADDR & _BV(ADDEN))) { //check USB connection
     //SerialNotInit=true;
     DDRD  = B00000000;
-    PORTD = B00000000;
+    //PORTD = B00000000;
+    PORTD = B01110111; //pull ups for PSX to properly work
     DDRF  = B00000000;
     PORTF = B00000000;
   }
-
+  //PORTD = B00000000;
+  
   pinMode(pinSNES, OUTPUT);
   pinMode(pinPSX, OUTPUT);
   pinMode(pinNEOGEO, OUTPUT);
@@ -252,8 +254,8 @@ void loop() {
     Psx[0].setupPins(dataPin, cmndPin, attPin1, clockPin, ackPin, 10);
     Psx[1].setupPins(dataPin, cmndPin, attPin2, clockPin, ackPin, 10);
 
-    Psx[0].rumble(0x41);
-    Psx[1].rumble(0x41);
+    //Psx[0].rumble(0x41);
+    //Psx[1].rumble(0x41);
   }
   else if (SISTEMA == NEOGEO_) {
     // Initialize debouncing timestamps
@@ -294,16 +296,25 @@ void loop() {
 
           for (gp = 0; gp < GAMEPAD_COUNT; gp++)
           {
+            //controllerType[gp] = NES;
             if (controllerType[gp] == NES) {   // NES
+              Serial.println("NES");
               bitWrite(buttons_SNES[gp], 5, bitRead(buttons_SNES[gp], 4));
               bitWrite(buttons_SNES[gp], 4, bitRead(buttons_SNES[gp], 6));
               buttons_SNES[gp] &= 0xC3F;
               //Serial.println(buttons_SNES[gp]);
             }
             else if (controllerType[gp] == NTT) // SNES NTT Data Keypad
+            {
               buttons_SNES[gp] &= 0x3FFFFFF;
-            else                               // SNES Gamepad
+              Serial.println("NTT");  
+            }
+            else // SNES Gamepad
+            {
+              Serial.println("SNES");
               buttons_SNES[gp] &= 0xFFF;
+            }
+              
           }
 
           for (gp = 0; gp < GAMEPAD_COUNT; gp++)
@@ -515,10 +526,10 @@ void loop() {
             verticalL_PSX[gp] = data6;
           }
 
-          if (mode != prevmode){
+          /*if (mode != prevmode){
             Psx[gp].rumble(mode);
             prevmode = mode;
-          }
+          }*/
           
           // Has any buttons changed state?
           if (buttons_PSX[gp] != buttonsPrev_PSX[gp] || horizontalR_PSX[gp] != horizontalRPrev_PSX[gp] || verticalR_PSX[gp] != verticalRPrev_PSX[gp] || horizontalL_PSX[gp] != horizontalLPrev_PSX[gp] || verticalL_PSX[gp] != verticalLPrev_PSX[gp])
