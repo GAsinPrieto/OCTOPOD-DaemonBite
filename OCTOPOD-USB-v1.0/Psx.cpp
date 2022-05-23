@@ -131,7 +131,7 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
   {
     _data1 = ~shift(motor1);
     while (_ackPin);
-    _data2 = ~shift(motor2);
+    _data2 = ~noshift(motor2);
 
     *data1 = _data1;
     *data2 = _data2;
@@ -146,7 +146,7 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
   {
     _data1 = ~shift(motor1);
     while (_ackPin);
-    _data2 = ~shift(motor2);
+    _data2 = ~noshift(motor2);
     while (_ackPin);
     _data3 = ~noshift(0xFF);
     while (_ackPin);

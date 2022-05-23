@@ -483,9 +483,9 @@ void Gamepad_::reset()
   }
   if (SISTEMAgp == PSX)
   {
-    /*_GamepadReport_PSX.Z = 0;
+    _GamepadReport_PSX.Z = 0;
     _GamepadReport_PSX.RZ = 0;
-    _GamepadReport_PSX.PoV = 0;*/
+    _GamepadReport_PSX.PoV = 0;
     _GamepadReport_PSX.X = 0;
     _GamepadReport_PSX.Y = 0;
     _GamepadReport_PSX.buttons = 0;
