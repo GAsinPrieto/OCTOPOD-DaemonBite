@@ -153,8 +153,8 @@ uint16_t verticalLPrev_PSX[GAMEPAD_COUNT_MAX]     = {0, 0, 0, 0};
 
 #define dataPin   3
 #define cmndPin   12
-#define attPin1   30
-#define attPin2   4
+#define attPin1   4
+#define attPin2   30
 #define clockPin  2
 #define ackPin    0
 
