@@ -47,8 +47,7 @@ byte Psx::shift(byte _dataOut)							// Does the actual shifting, both in and ou
     _temp = digitalRead(_dataPin);					// Reads the data pin
     if (_temp)
     {
-      /*if (_dataOut != 0x42)*/ _dataIn = _dataIn | (B10000000 >> _i);		// Shifts the read data into _dataIn
-      //else _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
+      _dataIn = _dataIn | (B10000000 >> _i);		// Shifts the read data into _dataIn
     }
 
     digitalWrite(_clockPin, HIGH);
@@ -76,8 +75,7 @@ byte Psx::noshift(byte _dataOut)              // Does NOT the actual shifting, b
     _temp = digitalRead(_dataPin);          // Reads the data pin
     if (_temp)
     {
-      /*if (_dataOut != 0x42) _dataIn = _dataIn | (B10000000 >> _i);    // Shifts the read data into _dataIn
-        else*/ _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
+      _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
     }
 
     digitalWrite(_clockPin, HIGH);
@@ -85,6 +83,83 @@ byte Psx::noshift(byte _dataOut)              // Does NOT the actual shifting, b
   }
   return _dataIn;
 }
+
+
+
+/*
+byte Psx::shift(byte _dataOut)              // Does the actual shifting, both in and out simultaneously
+{
+  _temp = 0;
+  _dataIn = 0;
+
+  for (_i = 0; _i <= 7; _i++)
+  {
+    digitalWrite(_clockPin, LOW);
+
+    delayMicroseconds(2);
+
+    if ( _dataOut & (1 << _i) ) digitalWrite(_cmndPin, HIGH); // Writes out the _dataOut bits
+    else digitalWrite(_cmndPin, LOW);
+
+    
+    delayMicroseconds(18);
+
+    digitalWrite(_clockPin, HIGH);
+
+    delayMicroseconds(2);
+
+    _temp = digitalRead(_dataPin);          // Reads the data pin
+    if (_temp)
+    {
+      _dataIn = _dataIn | (B10000000 >> _i);    // Shifts the read data into _dataIn
+    }
+
+    delayMicroseconds(18);
+  }
+  return _dataIn;
+}
+
+byte Psx::noshift(byte _dataOut)              // Does NOT the actual shifting, both in and out simultaneously
+{
+  _temp = 0;
+  _dataIn = 0;
+
+  for (_i = 0; _i <= 7; _i++)
+  {
+    digitalWrite(_clockPin, LOW);
+
+    delayMicroseconds(2);
+
+    if ( _dataOut & (1 << _i) ) digitalWrite(_cmndPin, HIGH); // Writes out the _dataOut bits
+    else digitalWrite(_cmndPin, LOW);
+
+    
+    delayMicroseconds(18);
+
+    digitalWrite(_clockPin, HIGH);
+
+    delayMicroseconds(2);
+
+    _temp = digitalRead(_dataPin);          // Reads the data pin
+    if (_temp)
+    {
+          _dataIn = _dataIn | (B00000001 << _i); //no shifting when asking for the controller mode
+    }
+
+    delayMicroseconds(18);
+  }
+  return _dataIn;
+}
+
+*/
+
+
+
+
+
+
+
+
 
 void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte ackPin, byte delay_)
 {
@@ -115,7 +190,6 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
 {
   byte motor1=0x00;
   byte motor2=0x00;
-  
   
   digitalWrite(_attPin, LOW);
 
@@ -170,7 +244,30 @@ void Psx::setupPins(byte dataPin, byte cmndPin, byte attPin, byte clockPin, byte
   }
 }
 
+void Psx::exitConfig()
+{
+  //exit cofig
+  digitalWrite(_attPin, LOW);
 
+  shift(0x01);
+  while (_ackPin);
+  shift(0x43);
+  while (_ackPin);
+  shift(0x00);
+  while (_ackPin);
+  shift(0x00);
+  while (_ackPin);
+  shift(0x5a);
+  while (_ackPin);
+  shift(0x5a);
+  shift(0x5a);
+  shift(0x5a);
+  shift(0x5a);
+  
+  digitalWrite(_attPin, HIGH);
+
+  return;  
+}
 
 void Psx::rumble(byte mode)
 {

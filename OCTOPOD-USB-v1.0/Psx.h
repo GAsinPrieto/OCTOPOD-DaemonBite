@@ -61,7 +61,9 @@ class Psx
     /*unsigned int*/ void read(uint16_t*, uint16_t*, uint16_t*, uint16_t*, uint16_t*, uint16_t*, byte*);								// Returns the status of the button presses in an unsignd int.
     // The value returned corresponds to each key as defined above.
     void rumble(byte);
-      
+
+    void exitConfig();
+    
   private:
     byte shift(byte _dataOut);
     byte noshift(byte _dataOut);
