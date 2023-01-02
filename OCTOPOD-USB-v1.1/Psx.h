@@ -33,14 +33,14 @@
 #define psxLeft		0x0001
 #define psxDown		0x0002
 #define psxRight	0x0004
-#define psxUp		0x0008
+#define psxUp		  0x0008
 #define psxStrt		0x0010
 #define psxSlct		0x0080
 
-#define psxSqu		0x0100
+#define psxSqu	0x0100
 #define psxX		0x0200
 #define psxO		0x0400
-#define psxTri		0x0800
+#define psxTri	0x0800
 #define psxR1		0x1000
 #define psxL1		0x2000
 #define psxR2		0x4000

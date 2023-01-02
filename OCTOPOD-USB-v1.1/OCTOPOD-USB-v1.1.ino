@@ -152,9 +152,9 @@ uint16_t verticalL_PSX[GAMEPAD_COUNT_MAX]     = {0, 0, 0, 0};
 uint16_t verticalLPrev_PSX[GAMEPAD_COUNT_MAX]     = {0, 0, 0, 0};
 
 #define dataPin   3
-#define cmndPin   12
-#define attPin1   30
-#define attPin2   4
+#define cmndPin   A11//12
+#define attPin1   A0//30
+#define attPin2   A6//4
 #define clockPin  2
 #define ackPin    0
 
@@ -254,8 +254,8 @@ void loop() {
     Psx[0].setupPins(dataPin, cmndPin, attPin1, clockPin, ackPin, 10);
     Psx[1].setupPins(dataPin, cmndPin, attPin2, clockPin, ackPin, 10);
 
-    //Psx[0].rumble(0x41);
-    //Psx[1].rumble(0x41);
+    Psx[0].rumble(0x41);
+    Psx[1].rumble(0x41);
   }
   else if (SISTEMA == NEOGEO_) {
     // Initialize debouncing timestamps
@@ -513,11 +513,13 @@ void loop() {
           buttons_PSX[gp] = 0;
           /*buttons_PSX[gp] = */Psx[gp].read(&data1, &data2, &data3, &data4, &data5, &data6, &mode);
 
-          if (mode & 0xF0 == 0xF0) Psx[gp].exitConfig(); //in config mode, I must exit from config!! ATTENTION: revise this when trying to setup rumble
-
-          if (mode == 0x41) buttons_PSX[gp] = (data2 << 8) | data1;
-
-          if (mode == 0x73 || mode == 0x53) {
+          if (mode & 0xF0 == 0xF0) {
+            Psx[gp].exitConfig(); //in config mode, I must exit from config!! ATTENTION: revise this when trying to setup rumble
+          }
+          /*else*/ if (mode == 0x41) {
+            buttons_PSX[gp] = (data2 << 8) | data1; //Digital mode
+          }
+          else if (mode == 0x73 || mode == 0x53) { //Analogue modes
 
             buttons_PSX[gp] = (data2 << 8) | data1;//need to tell appart digital from analogue???
 
