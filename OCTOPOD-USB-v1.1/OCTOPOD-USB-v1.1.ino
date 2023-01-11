@@ -254,8 +254,8 @@ void loop() {
     Psx[0].setupPins(dataPin, cmndPin, attPin1, clockPin, ackPin, 10);
     Psx[1].setupPins(dataPin, cmndPin, attPin2, clockPin, ackPin, 10);
 
-    Psx[0].rumble(0x41);
-    Psx[1].rumble(0x41);
+    //Psx[0].rumble(0x41);
+    //Psx[1].rumble(0x41);
   }
   else if (SISTEMA == NEOGEO_) {
     // Initialize debouncing timestamps
