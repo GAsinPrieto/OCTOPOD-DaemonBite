@@ -1,3 +1,4 @@
+#include <Keyboard.h>
 #include "Gamepad.h"
 #include "SegaControllers32U4.h"
 #include "shift_74597.h"
@@ -179,6 +180,8 @@ const char *gp_serial = "DECAPOD";
 
 void setup() {
 
+  Keyboard.begin();
+  
   while (!(UDADDR & _BV(ADDEN))) { //check USB connection
     //SerialNotInit=true;
     DDRD  = B00000000;
@@ -353,6 +356,8 @@ void loop() {
             Gamepad[gp]._GamepadReport_GENESIS.Y = ((controllers.currentState[gp] & SC_BTN_DOWN) >> SC_BIT_SH_DOWN) - ((controllers.currentState[gp] & SC_BTN_UP) >> SC_BIT_SH_UP);
             Gamepad[gp]._GamepadReport_GENESIS.X = ((controllers.currentState[gp] & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT) - ((controllers.currentState[gp] & SC_BTN_LEFT) >> SC_BIT_SH_LEFT);
             Gamepad[gp].send();
+            if (Gamepad[gp]._GamepadReport_GENESIS.Y)
+              Keyboard.write(KEY_F12);
             lastState[gp] = controllers.currentState[gp];
           }
         }
